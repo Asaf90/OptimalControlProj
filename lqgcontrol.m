@@ -21,8 +21,8 @@ else
     L = kalmangain(P,C,M);
     
     u = -K*x;
-    x_hat = A*x + B*u + L*(z - C*(A*x + B*u));
-    J = x'*Q*x + u'*R*u;
+    x_hat(:,N+1) = A*x + B*u + L*(z - C*(A*x + B*u));
+    J(1,N) = x'*Q*x + u'*R*u;
 end
 end
 
