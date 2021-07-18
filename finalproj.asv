@@ -31,37 +31,24 @@ F = exp(F_cont*dt);
 B = B_cont*dt;
 M = M_cont/dt;
 H = H_cont;
-Q = Q_cont;
-R = R_cont;
 
 a_T = zeros(1,N);         
 y = zeros(1,N);
 v = zeros(1,N);
 
-% P = zeros(3,3,N);
-% P(:,:,1) = P_0;
-% x_hat = zeros(3,N+1);
-% J = zeros(1,N);
+P = zeros(3,3,N);
+P(:,:,1) = P_0;
+x_hat = zeros(3,N+1);
+J = zeros(1,N);
 
 
-x = [y; v; a_T];            % state vecvor
-z = zeros(size(x));      % create measurement vector
-% u = zeros(1,N);     % plant vector
+x = [y; v; a_T];            %state vecvor
+z = zeros(size(x));      %TODO: create measurement vector
+u = zeros(1,N);     % plant vector
 
 
-[ u,x_hat, J,P] = lqgcontrol( x,z,F,B,H,M,Q,R,Sf,P_0,W,N );
+[ u,x_hat, J,P] = lqgcontrol( x,z,F,B,H,M,Q,R,S,P0,N );
 
-figure;
-plot(t,u)
-
-figure;
-plot(t,J)
-
-figure;
-plot(x_hat(3,:))
-hold on
-plot(x_hat(2,:))
-plot(x_hat(1,:))
 
 
 
