@@ -1,3 +1,7 @@
+clc
+close all
+clear variables
+
 %define timeline
 dt = 0.1;
 tf = 10;
@@ -8,7 +12,7 @@ V = 3000 * 3.28; %convert to m/sec for consistency
 tau = 2;
 R1 = 15e-6;
 R2 = 1.67e-3;
-W = 100;
+W_cont = 100;
 b = 1.52e-2;
 P22 = 16;
 P33 = 400;
@@ -26,30 +30,52 @@ create_H = 1./(V*(tf-t))';              %create vector of values for first eleme
 H_cont = zeros(length(create_H), 3);    
 H_cont(1:length(create_H)) = create_H;
 M_cont = R1 + R2/((tf-t').^2);
+G = [0; 0; 1];
 
 F = exp(F_cont*dt);
 B = B_cont*dt;
 M = M_cont/dt;
 H = H_cont;
+Q = Q_cont;
+R = R_cont;
+W = G*W_cont*G'*dt;
 
 a_T = zeros(1,N);         
 y = zeros(1,N);
 v = zeros(1,N);
 
-P = zeros(3,3,N);
-P(:,:,1) = P_0;
-x_hat = zeros(3,N+1);
-J = zeros(1,N);
+% P = zeros(3,3,N);
+% P(:,:,1) = P_0;
+% x_hat = zeros(3,N+1);
+% J = zeros(1,N);
 
 
-x = [y; v; a_T];            %state vecvor
-z = zeros(size(x));      %TODO: create measurement vector
-u = zeros(1,N);     % plant vector
+x = [y; v; a_T];            % state vecvor
+z = zeros(size(x));      % create measurement vector
+% u = zeros(1,N);     % plant vector
 
 
-[ u,x_hat, J,P] = lqgcontrol( x,z,F,B,H,M,Q,R,S,P0,N );
+[ u,x_hat, J,P] = lqgcontrol( x,z,F,B,H,M,Q,R,Sf,P_0,W,N );
+
+figure;
+plot(t,u)
+title('')
+xlabel('Time[sec]');
+ylabel('')
+
+figure;
+plot(t,J)
+title('')
+xlabel('Time[sec]');
 
 
+figure;
+plot(t,x_hat(3,1:end-1))
+hold on
+plot(t,x_hat(2,1:end-1))
+plot(t,x_hat(1,1:end-1))
+title('')
+xlabel('Time[sec]');
 
 
 % mu - 1;

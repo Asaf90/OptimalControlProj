@@ -1,3 +1,7 @@
+clc
+close all
+clear variables
+
 %define timeline
 dt = 0.1;
 tf = 10;
@@ -8,7 +12,7 @@ V = 3000 * 3.28; %convert to m/sec for consistency
 tau = 2;
 R1 = 15e-6;
 R2 = 1.67e-3;
-W = 100;
+W_cont = 100;
 b = 1.52e-2;
 P22 = 16;
 P33 = 400;
@@ -26,6 +30,7 @@ create_H = 1./(V*(tf-t))';              %create vector of values for first eleme
 H_cont = zeros(length(create_H), 3);    
 H_cont(1:length(create_H)) = create_H;
 M_cont = R1 + R2/((tf-t').^2);
+G = [0; 0; 1];
 
 F = exp(F_cont*dt);
 B = B_cont*dt;
@@ -33,6 +38,7 @@ M = M_cont/dt;
 H = H_cont;
 Q = Q_cont;
 R = R_cont;
+W = G*W_cont*G'*dt;
 
 a_T = zeros(1,N);         
 y = zeros(1,N);
@@ -53,16 +59,25 @@ z = zeros(size(x));      % create measurement vector
 
 figure;
 plot(t,u)
+title('Estimated Control Signal')
+xlabel('Time[sec]');
+ylabel('Control - Signal u_k')
 
 figure;
 plot(t,J)
+title('Estimated Cost')
+xlabel('Time[sec]');
+ylabel('Cost - J_k')
 
 figure;
-plot(x_hat(3,:))
+plot(t,x_hat(3,1:end-1))
 hold on
-plot(x_hat(2,:))
-plot(x_hat(1,:))
-
+plot(t,x_hat(2,1:end-1))
+plot(t,x_hat(1,1:end-1))
+title('Estimated State Vector')
+xlabel('Time[sec]');
+ylabel('State - x_k')
+legend('a_t','v','y','Location','southwest')
 
 
 % mu - 1;
