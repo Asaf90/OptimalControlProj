@@ -79,7 +79,8 @@ xlabel('Time[sec]');
 ylabel('State - x_k')
 legend('a_t','v','y','Location','southwest')
 
-
-% mu - 1;
-% sigma = 1;
-% a_T = bm(mu,sigma);
+figure;
+semilogy(t,abs(u))
+title('Control Signal Absolute Values - Log Scale')
+xlabel('Time [sec]')
+ylabel('10log(|u_k|) [dB]')
